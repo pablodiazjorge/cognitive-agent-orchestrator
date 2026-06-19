@@ -1,4 +1,4 @@
-# Cognitive Agent Orchestrator (September 2024- January 2025)
+# Cognitive Agent Orchestrator (September 2024 - January 2025)
 
 A minimal but complete **ReAct (Reasoning + Acting)** cognitive agent orchestrator. It exposes a deterministic state-machine-driven agent loop on the backend and streams every thought, tool call, tool result, and final answer to an Angular 18 zoneless frontend via **Server-Sent Events (SSE)**.
 
@@ -351,3 +351,7 @@ The dev server is configured with `proxy.conf.json` to forward `/api` calls to `
 This project's code is licensed under the [MIT License](LICENSE).
 
 The optional Qwen 2.5 Coder model is a separate work © Alibaba Cloud and is licensed under the Apache 2.0 license. Model weights are not included in this repository and must be obtained directly from the original source.
+
+## A note on the commit history
+
+This repository was published in 2026 as a curated reference of work originally designed and prototyped between September 2024 - January 2025. The technology stack reflects the versions available during that development window and has been intentionally preserved for historical accuracy.
