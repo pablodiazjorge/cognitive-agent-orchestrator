@@ -1,0 +1,36 @@
+<div class="thoughts-card">
+  <h2>Agent Thoughts</h2>
+
+  @if (streamService.currentThoughts().length > 0) {
+    <div class="thoughts-list">
+      @for (event of streamService.currentThoughts(); track event.timestamp + '-' + $index) {
+        <div class="thought" [class]="'type-' + event.type">
+          <div class="body">
+            <span class="label">{{ labelFor(event.type) }}</span>
+
+            @if (event.content) {
+              <p class="content">{{ event.content }}</p>
+            }
+
+            @if (event.toolName) {
+              <p class="meta">
+                <strong>{{ event.toolName }}</strong>
+                @if (event.args) {
+                  <code>{{ event.args | json }}</code>
+                }
+              </p>
+            }
+
+            @if (event.result) {
+              <p class="result">{{ event.result }}</p>
+            }
+          </div>
+        </div>
+      }
+    </div>
+  } @else {
+    <div class="placeholder">
+      <p>Waiting for agent activity...</p>
+    </div>
+  }
+</div>

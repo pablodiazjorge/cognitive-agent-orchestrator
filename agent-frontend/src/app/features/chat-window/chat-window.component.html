@@ -1,0 +1,42 @@
+<div class="chat-card">
+  <div class="messages" #scrollContainer>
+    @if (messages().length === 0) {
+      <div class="empty-state">
+        <p>Start a conversation with the cognitive agent.</p>
+        <span class="hint">Try: "Calculate 15 * 7 + 3" or "What's the weather in Tokyo?"</span>
+      </div>
+    }
+
+    @for (msg of messages(); track msg.timestamp) {
+      <div class="message-row" [class.user]="msg.role === 'user'">
+        <div class="bubble" [class.user-bubble]="msg.role === 'user'" [class.agent-bubble]="msg.role === 'agent'">
+          <p class="content">{{ msg.content }}</p>
+          <span class="time">{{ msg.timestamp | date:'shortTime' }}</span>
+        </div>
+      </div>
+    }
+
+    @if (isProcessing()) {
+      <div class="message-row agent-typing">
+        <div class="bubble agent-bubble">
+          <span class="dot"></span>
+          <span class="dot"></span>
+          <span class="dot"></span>
+        </div>
+      </div>
+    }
+  </div>
+
+  <div class="input-area">
+    <textarea
+      [(ngModel)]="userInput"
+      (keydown)="handleKeydown($event)"
+      placeholder="Type a message..."
+      rows="1"
+      [disabled]="isProcessing()"
+    ></textarea>
+    <button (click)="sendMessage()" [disabled]="!userInput.trim() || isProcessing()">
+      Send
+    </button>
+  </div>
+</div>

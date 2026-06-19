@@ -1,0 +1,15 @@
+services:
+  agent-backend:
+    build: ./agent-backend
+    ports:
+      - "${BACKEND_HOST_PORT:-3001}:3000"
+    environment:
+      - PORT=3000
+      - LLM_PROVIDER=simulated
+
+  agent-frontend:
+    build: ./agent-frontend
+    ports:
+      - "${FRONTEND_HOST_PORT:-8080}:80"
+    depends_on:
+      - agent-backend

@@ -1,0 +1,55 @@
+.app-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background: var(--bg);
+}
+
+.app-header {
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid var(--surface-light);
+  background: var(--surface);
+
+  h1 {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .subtitle {
+    margin: 0.25rem 0 0;
+    color: var(--muted);
+    font-size: 0.875rem;
+  }
+}
+
+.app-main {
+  display: grid;
+  grid-template-columns: 1fr 22rem;
+  flex: 1;
+  min-height: 0;
+}
+
+.chat-panel {
+  min-height: 0;
+  overflow: hidden;
+  border-right: 1px solid var(--surface-light);
+}
+
+.thoughts-panel {
+  min-height: 0;
+  overflow: hidden;
+}
+
+@media (max-width: 768px) {
+  .app-main {
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr auto;
+  }
+
+  .chat-panel {
+    border-right: none;
+    border-bottom: 1px solid var(--surface-light);
+  }
+}

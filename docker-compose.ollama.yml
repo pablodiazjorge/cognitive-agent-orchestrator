@@ -1,0 +1,43 @@
+# Extends the default simulated stack with an Ollama service running qwen2.5-coder:7b.
+services:
+  agent-backend:
+    environment:
+      - PORT=3000
+      - LLM_PROVIDER=ollama
+      - OLLAMA_BASE_URL=http://ollama:11434
+      - OLLAMA_MODEL=qwen2.5-coder:7b
+    depends_on:
+      ollama:
+        condition: service_healthy
+
+  agent-frontend:
+    depends_on:
+      - agent-backend
+
+  ollama:
+    image: ollama/ollama:0.4.7
+    ports:
+      - "${OLLAMA_HOST_PORT:-11434}:11434"
+    volumes:
+      - ollama-models:/root/.ollama
+    # Healthcheck: wait until the specific model is available
+    healthcheck:
+      test: ["CMD", "sh", "-c", "ollama list | grep -q qwen2.5-coder:7b"]
+      interval: 15s
+      timeout: 10s
+      retries: 60
+      start_period: 20s
+    # Clear the default entrypoint (ollama) so we can run a shell script
+    entrypoint: ""
+    # Start Ollama, pull the model if it is not present, then keep serving.
+    command: >
+      sh -c "
+        ollama serve &
+        OLLAMA_PID=$$!
+        sleep 10
+        ollama list | grep -q qwen2.5-coder:7b || ollama pull qwen2.5-coder:7b
+        wait $$OLLAMA_PID
+      "
+
+volumes:
+  ollama-models:
