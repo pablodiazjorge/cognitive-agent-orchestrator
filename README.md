@@ -1,5 +1,7 @@
 # Cognitive Agent Orchestrator (September 2024 - January 2025)
 
+> **Snapshot (2024-2025).** Published in 2026, keeping the stack of the time; not maintained. Limitations: the action parser (`agent-loop.ts:20`) breaks on parentheses inside the arguments; `new Function` in the calculator is safe because of the whitelist in `calculator.tool.ts:18`; the backend has no tests and no lockfile, and `cors()` is open. See [Limitations](#limitations).
+
 A minimal but complete **ReAct (Reasoning + Acting)** cognitive agent orchestrator. It exposes a deterministic state-machine-driven agent loop on the backend and streams every thought, tool call, tool result, and final answer to an Angular 18 zoneless frontend via **Server-Sent Events (SSE)**.
 
 The project is a monorepo with two applications:
@@ -343,6 +345,14 @@ npm start
 ```
 
 The dev server is configured with `proxy.conf.json` to forward `/api` calls to `http://localhost:3000`. In the Docker stack, the nginx container proxies `/api` to the backend service.
+
+---
+
+## Limitations
+
+- **The action parser breaks on parentheses inside the arguments.** `agent-backend/src/core/agent-loop.ts:20` matches the arguments with `\{[^)]*\}`, so an action such as `calculator({"expression":"(2+3)*4"})` is not recognised. It happens in both modes: the simulated provider emits exactly that action for the prompt `Calculate (2+3)*4`.
+- **`new Function` in the calculator is safe because of its whitelist.** `agent-backend/src/tools/calculator.tool.ts:25` evaluates the expression with `new Function`, which is only acceptable because the check at `:18` lets through nothing but digits, `+ - * /`, parentheses, dots and spaces, so no identifier or call can reach it. Loosening that pattern would open code execution.
+- **The backend is a demo, not a service.** It has no tests and no lockfile (`agent-backend/` has no `package-lock.json`), and `server.ts:101` calls `cors()` with no options, which accepts requests from any origin. The frontend has no tests either; `scripts/test-agent.sh` is a manual smoke check.
 
 ---
 
